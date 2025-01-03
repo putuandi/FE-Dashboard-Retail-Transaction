@@ -3,6 +3,8 @@
 import { lazy } from 'react'
 
 const Dashboard = lazy(() => import('../pages/protected/Dashboard'))
+const Kasir = lazy(() => import('../pages/protected/Kasir'))
+const Memberships = lazy(() => import('../pages/protected/Memberships'))
 const Welcome = lazy(() => import('../pages/protected/Welcome'))
 const Page404 = lazy(() => import('../pages/protected/404'))
 const Blank = lazy(() => import('../pages/protected/Blank'))
@@ -23,6 +25,14 @@ const routes = [
   {
     path: '/dashboard', // the url
     component: Dashboard, // view rendered
+  },
+  {
+    path: '/kasir', // the url
+    component: Kasir, // view rendered
+  },
+  {
+    path: '/memberships', // the url
+    component: Memberships, // view rendered
   },
   {
     path: '/welcome', // the url

@@ -33,6 +33,11 @@ const routes = [
     name: 'Dashboard',
   },
   {
+    path: '/app/kasir',
+    icon: <DocumentTextIcon className={iconClasses} />,
+    name: 'Kasir',
+  },
+  {
     path: '/app/memberships',
     icon: <WalletIcon className={iconClasses} />,
     name: 'Memberships',
