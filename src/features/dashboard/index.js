@@ -23,8 +23,8 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, Title, Tool
 ChartJS.register(CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend);
 
 const statsData = [
-    { title: "Total Sales", value: "Rp 16.344.044", icon: <CreditCardIcon className='w-8 h-8' />, description: "Current year" },
-    { title: "Total Transaction", value: "11.592", icon: <ShoppingCartIcon className='w-8 h-8' />, description: "Current year" },
+    { title: "Total Sales", value: "Rp 10.172.023", icon: <CreditCardIcon className='w-8 h-8' />, description: "Current year" },
+    { title: "Total Transaction", value: "5.592", icon: <ShoppingCartIcon className='w-8 h-8' />, description: "Current year" },
     { title: "Product Sold", value: "1.569", icon: <ShoppingBagIcon className='w-8 h-8' />, description: "Current year" },
     // {title : "Pending Leads", value : "450", icon : <CircleStackIcon className='w-8 h-8'/>, description : "50 in hot leads"},
     // {title : "Active Users", value : "5.6k", icon : <UsersIcon className='w-8 h-8'/>, description : "↙ 300 (18%)"},
@@ -98,13 +98,16 @@ function Dashboard() {
     ]);
 
     const [customerSegmentationDBSCAN, setCustomerSegmentationDBSCAN] = useState([
-        { no: 1, name: "Others", popularity: 55.98, sales: "Rp 1.111.420" },
-        { no: 2, name: "Recent Customers", popularity: 13.05, sales: "Rp 579.050" },
-        { no: 3, name: "Frequent Customers", popularity: 12.48, sales: "Rp 1.277.964" },
-        { no: 4, name: "Best Customers", popularity: 9.97, sales: "Rp 1.827.924" },
-        { no: 5, name: "Big Spenders", popularity: 4.40, sales: "Rp 465.964" },
-        { no: 6, name: "Loyal Customers", popularity: 2.50, sales: "Rp 107.054" },
-        { no: 7, name: "Noise", popularity: 1.64, sales: "Rp 2.802.645" },
+        { no: 1, name: "Low Value Customers", popularity: 53.02, sales: "Rp 4.827.924" },
+        { no: 2, name: "Occasuinal Shoppers", popularity: 0.76, sales: "Rp 1.579.050" },
+        { no: 3, name: "Loyal Customers", popularity: 0.047, sales: "Rp 1.107.054" },
+        { no: 4, name: "Others", popularity: 46.18, sales: "Rp 1.111.420" },
+        // { no: 2, name: "Recent Customers", popularity: 13.05, sales: "Rp 579.050" },
+        // { no: 3, name: "Frequent Customers", popularity: 12.48, sales: "Rp 1.277.964" },
+        // { no: 4, name: "Best Customers", popularity: 9.97, sales: "Rp 1.827.924" },
+        // { no: 5, name: "Big Spenders", popularity: 4.40, sales: "Rp 465.964" },
+        // { no: 6, name: "Loyal Customers", popularity: 2.50, sales: "Rp 107.054" },
+        // { no: 7, name: "Noise", popularity: 1.64, sales: "Rp 2.802.645" },
     ]);
 
     // const [customerData, setCustomerData] = useState([]);
