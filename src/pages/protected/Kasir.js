@@ -1,30 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../features/common/headerSlice';
+import Select from 'react-select';
+import axios from 'axios';
 
 function InternalPage() {
     const dispatch = useDispatch();
     const [currentDate, setCurrentDate] = useState('');
-    const [customerName, setCustomerName] = useState('');
-    const [items, setItems] = useState([{ productType: '', productPrice: "", quantity: "", totalPrice: "" }]);
+    const [transaction_details, setTransaction_details] = useState([{ product_id: '', price_per_unit: "", quantity: "" }]);
     const [products, setProducts] = useState([]);
-    const [existingCustomer, setExistingCustomer] = useState(null);
-    // const [selectedCustomer, setSelectedCustomer] = useState(null);
-
-    const dummyCustomers = [
-        { id: 'C001', name: 'Putu', phone: '081234567890' },
-        { id: 'C002', name: 'Made', phone: '082345678901' },
-        { id: 'C003', name: 'Nyoman', phone: '083456789012' },
-    ];
 
     useEffect(() => {
         const fetchProducts = async () => {
-            const productData = [
-                { id: '1', name: 'Product A', price: 10000 },
-                { id: '2', name: 'Product B', price: 15000 },
-                { id: '3', name: 'Product C', price: 20000 },
-            ];
-            setProducts(productData);
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/products');
+                const productsOptions = response.data.data.map(product => ({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                }));
+                setProducts(productsOptions);
+            } catch (error) {
+                console.error('Error fetching customers:', error);
+            }
+            // const productData = [
+            //     { id: '1', name: 'Product A', price: 10000 },
+            //     { id: '2', name: 'Product B', price: 15000 },
+            //     { id: '3', name: 'Product C', price: 20000 },
+            // ];
+            // setProducts(productData);
         };
 
         fetchProducts();
@@ -32,25 +36,25 @@ function InternalPage() {
     }, []);
 
     const handleItemChange = (index, field, value) => {
-        const newItems = [...items];
-        if (field === 'productType') {
-            if (newItems.some((item, i) => i !== index && item.productType === value)) {
+        const newItems = [...transaction_details];
+        if (field === 'product_id') {
+            if (newItems.some((item, i) => i !== index && item.product_id === value)) {
                 alert('Produk ini sudah dipilih sebelumnya.');
                 return;
             }
             const selectedProduct = products.find(product => product.id === value);
-            newItems[index].productType = value;
-            newItems[index].productPrice = selectedProduct.price;
-            newItems[index].totalPrice = selectedProduct.price * newItems[index].quantity;
+            newItems[index].product_id = value;
+            newItems[index].price_per_unit = selectedProduct.price;
+            // newItems[index].totalPrice = selectedProduct.price * newItems[index].quantity;
         } else if (field === 'quantity') {
             newItems[index].quantity = value;
-            newItems[index].totalPrice = newItems[index].productPrice * value;
+            // newItems[index].totalPrice = newItems[index].productPrice * value;
         }
-        setItems(newItems);
+        setTransaction_details(newItems);
     };
 
     const addItem = () => {
-        setItems([...items, { productType: '', productPrice: "", quantity: "", totalPrice: "" }]);
+        setTransaction_details([...transaction_details, { product_id: '', price_per_unit: "", quantity: "" }]);
     };
 
     useEffect(() => {
@@ -58,13 +62,13 @@ function InternalPage() {
     }, []);
 
     const validateForm = () => {
-        if (!customerName.trim()) {
-            alert('ID / Nama pelanggan tidak boleh kosong.');
-            return false;
-        }
-        for (const item of items) {
-            if (!item.productType || !item.quantity) {
-                alert('Pastikan jenis produk dan jumlah pesanan terisi.');
+        // if (!selectedCustomer.trim()) {
+        //     alert('Selected pelanggan tidak boleh kosong');
+        //     return false;
+        // }
+        for (const item of transaction_details) {
+            if (!item.product_id || !item.quantity) {
+                alert('Pastikan produk dan jumlah pesanan terisi');
                 return false;
             }
         }
@@ -76,9 +80,9 @@ function InternalPage() {
         if (!validateForm()) return;
 
         const transactionData = {
+            membership_id: selectedCustomer,
             date: currentDate,
-            pelanggan: customerName,
-            items,
+            transaction_details,
         };
 
         try {
@@ -91,8 +95,7 @@ function InternalPage() {
             if (response.ok) {
                 console.log(transactionData)
                 alert('Transaksi berhasil disimpan.');
-                setCustomerName('');
-                setItems([{ productType: '', productPrice: "", quantity: "", totalPrice: "" }]);
+                setTransaction_details([{ product_id: '', price_per_unit: "", quantity: "" }]);
             } else {
                 throw new Error('Gagal menyimpan transaksi.');
             }
@@ -101,52 +104,27 @@ function InternalPage() {
         }
     };
 
-    const handleCustomerSearch = async () => {
-        if (!customerName.trim()) {
-            setExistingCustomer(null);
-            return;
-        }
-
-        // try {
-        //     const response = await fetch(`https://your-api.com/customers?name=${customerName}`);
-        //     if (response.ok) {
-        //         const customerData = await response.json();
-        //         if (customerData.length > 0) {
-        //             setExistingCustomer(customerData[0]);
-        //         } else {
-        //             setExistingCustomer(null);
-        //         }
-        //     }
-        // } catch (error) {
-        //     console.error("Error fetching customer:", error);
-        // }
-        const foundCustomer = dummyCustomers.find(customer => customer.id.toLowerCase().includes(customerName.toLowerCase()));
-        if (foundCustomer) {
-            setExistingCustomer(foundCustomer);
-        } else {
-            setExistingCustomer(null);
-        }
-    };
-
+    const [customers, setCustomers] = useState([]);
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
     useEffect(() => {
-        handleCustomerSearch();
-    }, [customerName]);
-
-    // const handleCustomerSelect = (e) => {
-    //     const selectedId = e.target.value;
-    //     if (selectedId) {
-    //         const foundCustomer = dummyCustomers.find(customer => customer.id === selectedId);
-    //         setSelectedCustomer(foundCustomer);
-    //     } else {
-    //         setSelectedCustomer(null);
-    //     }
-    // };
-
-    // const handleManualCustomerInput = (e) => {
-    //     setCustomerName(e.target.value);
-    //     setSelectedCustomer(null);
-    // };
-
+        const fetchCustomers = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/memberships');
+                const customerOptions = response.data.data.map(membership => ({
+                    value: membership.id,
+                    label: `${membership.name} (${membership.id})`
+                }));
+                setCustomers(customerOptions);
+            } catch (error) {
+                console.error('Error fetching customers:', error);
+            }
+        };
+        fetchCustomers();
+    }, []);
+    const handleSelectChange = (selectedOption) => {
+        setSelectedCustomer(selectedOption);
+        console.log('Selected customer:', selectedOption);
+    };
 
     return (
         <div>
@@ -162,82 +140,24 @@ function InternalPage() {
                     />
                 </div>
 
-                {/* <div className="mb-4">
-                    <label className="block mb-2">ID / Nama Pelanggan</label>
-                    <input
-                        type="text"
-                        value={customerName}
-                        onChange={(e) => setCustomerName(e.target.value)}
-                        placeholder="Masukkan ID atau Nama"
-                        className="w-full p-2 border bg-base-100 rounded"
+                <div className="w-full">
+                    <label className="block mb-2">Pilih Pelanggan Membership</label>
+                    <Select
+                        value={selectedCustomer}
+                        onChange={handleSelectChange}
+                        options={customers}
+                        isSearchable
+                        placeholder="Cari Pelanggan Membership"
                     />
-                </div> */}
-
-                <div className="mb-4">
-                    <label className="block mb-2">ID / Nama Pelanggan</label>
-                    <input
-                        type="text"
-                        value={customerName}
-                        onChange={(e) => setCustomerName(e.target.value)}
-                        onBlur={handleCustomerSearch}
-                        placeholder="Masukkan ID atau Nama"
-                        className="w-full p-2 border bg-base-100 rounded"
-                    />
-                    {existingCustomer && (
-                        <div className="mt-2 text-green-500">
-                            Pelanggan ditemukan: {existingCustomer.name}
-                        </div>
-                    )}
-                    {!existingCustomer && customerName && (
-                        <div className="mt-2 text-red-500">
-                            Pelanggan tidak ditemukan, silakan masukkan secara manual.
-                        </div>
-                    )}
                 </div>
 
-                {/* <div className="mb-4">
-                    <label className="block mb-2">ID / Nama Pelanggan</label>
-                    <div className="flex space-x-4">
-                        <select
-                            value={selectedCustomer ? selectedCustomer.id : ''}
-                            onChange={handleCustomerSelect}
-                            className="w-full p-2 border bg-base-100 rounded"
-                            disabled={customerName.trim() !== ''}
-                        >
-                            <option value="">Pilih Pelanggan Membership</option>
-                            {dummyCustomers.map((customer) => (
-                                <option key={customer.id} value={customer.id}>
-                                    {customer.name} ({customer.phone})
-                                </option>
-                            ))}
-                        </select>
-                        <input
-                            type="text"
-                            value={customerName}
-                            onChange={handleManualCustomerInput}
-                            placeholder="Masukkan Nama Pelanggan Non-Membership"
-                            className="w-full p-2 border bg-base-100 rounded"
-                            disabled={selectedCustomer !== null}
-                        />
-                    </div>
-                    {selectedCustomer && (
-                        <div className="mt-2 text-green-500">
-                            Pelanggan Membership Terpilih: {selectedCustomer.name} ({selectedCustomer.phone})
-                        </div>)}
-                    {!selectedCustomer && customerName && (
-                        <div className="mt-2 text-yellow-500">
-                            Pelanggan Non Membership Terpilih : {customerName}
-                        </div>
-                    )}
-                </div> */}
-
-                {items.map((item, index) => (
+                {transaction_details.map((item, index) => (
                     <div key={index} className="mb-4 border-t pt-4">
                         <div className="mb-4">
-                            <label className="block mb-2">Jenis Produk</label>
+                            <label className="block mb-2">Nama Produk</label>
                             <select
-                                value={item.productType}
-                                onChange={(e) => handleItemChange(index, 'productType', e.target.value)}
+                                value={item.product_id}
+                                onChange={(e) => handleItemChange(index, 'product_id', e.target.value)}
                                 className="w-full p-2 border bg-base-100 rounded"
                             >
                                 <option value="">Pilih Produk</option>
@@ -253,7 +173,7 @@ function InternalPage() {
                             <label className="block mb-2">Harga Item</label>
                             <input
                                 type="text"
-                                value={item.productPrice.toLocaleString('id-ID')}
+                                value={item.price_per_unit.toLocaleString('id-ID')}
                                 readOnly
                                 className="w-full p-2 border bg-base-100 rounded"
                             />
@@ -274,7 +194,7 @@ function InternalPage() {
                             <label className="block mb-2">Total Harga</label>
                             <input
                                 type="text"
-                                value={item.totalPrice.toLocaleString('id-ID')}
+                                value={(item.price_per_unit * item.quantity).toLocaleString('id-ID')}
                                 readOnly
                                 className="w-full p-2 border bg-base-100 rounded"
                             />

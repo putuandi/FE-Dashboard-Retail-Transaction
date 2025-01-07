@@ -52,38 +52,38 @@ const routes = [
     icon: <ShoppingBagIcon className={iconClasses} />, // icon component
     name: 'Product', // name that appear in Sidebar
   },
-  {
-    path: '/app/sales-report', // url
-    icon: <ChartBarIcon className={iconClasses} />, // icon component
-    name: 'Sales Report', // name that appear in Sidebar
-  },
-  {
-    path: '/app/history', // url
-    icon: <DocumentDuplicateIcon className={iconClasses} />, // icon component
-    name: 'History', // name that appear in Sidebar
-  },
-  {
-    path: '', //no url needed as this has submenu
-    icon: <Cog6ToothIcon className={`${iconClasses} inline`} />, // icon component
-    name: 'Settings', // name that appear in Sidebar
-    submenu: [
-      {
-        path: '/app/settings-profile', //url
-        icon: <UserIcon className={submenuIconClasses} />, // icon component
-        name: 'Profile', // name that appear in Sidebar
-      },
-      {
-        path: '/app/settings-billing',
-        icon: <WalletIcon className={submenuIconClasses} />,
-        name: 'Billing',
-      },
-      {
-        path: '/app/settings-team', // url
-        icon: <UsersIcon className={submenuIconClasses} />, // icon component
-        name: 'Team Members', // name that appear in Sidebar
-      },
-    ]
-  },
+  // {
+  //   path: '/app/sales-report', // url
+  //   icon: <ChartBarIcon className={iconClasses} />, // icon component
+  //   name: 'Sales Report', // name that appear in Sidebar
+  // },
+  // {
+  //   path: '/app/history', // url
+  //   icon: <DocumentDuplicateIcon className={iconClasses} />, // icon component
+  //   name: 'History', // name that appear in Sidebar
+  // },
+  // {
+  //   path: '', //no url needed as this has submenu
+  //   icon: <Cog6ToothIcon className={`${iconClasses} inline`} />, // icon component
+  //   name: 'Settings', // name that appear in Sidebar
+  //   submenu: [
+  //     {
+  //       path: '/app/settings-profile', //url
+  //       icon: <UserIcon className={submenuIconClasses} />, // icon component
+  //       name: 'Profile', // name that appear in Sidebar
+  //     },
+  //     {
+  //       path: '/app/settings-billing',
+  //       icon: <WalletIcon className={submenuIconClasses} />,
+  //       name: 'Billing',
+  //     },
+  //     {
+  //       path: '/app/settings-team', // url
+  //       icon: <UsersIcon className={submenuIconClasses} />, // icon component
+  //       name: 'Team Members', // name that appear in Sidebar
+  //     },
+  //   ]
+  // },
 
 
   // {
